@@ -5,20 +5,24 @@ class WalkItem:
     def __init__(self, root, dirs, files):
         self.root = root
         self.dirs = dirs
+        self.items = dirs + files
         filtered_files = []
         for file in files:
-            file_path = os.path.join(root, file)
-            if is_file_to_skip(file_path):
-                continue
             filtered_files.append(file)
         self.files = filtered_files
+
+    def __str__(self):
+        return ",".join(self.files)
+    
+    def __repr__(self):
+        return ",".join(self.files)
 
 class Project:
     def __init__(self, project_root):
         self.project_root = project_root
         self.walk_items = []
         for root, dirs, files in os.walk(project_root):
-            if is_file_to_skip(root):
+            if root != project_root and is_file_to_skip(root):
                 continue
             self.walk_items.append(WalkItem(root, dirs, files))
         
